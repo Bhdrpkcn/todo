@@ -10,8 +10,9 @@ console.log(todo)
   return (
     <li>
       <span>
-      {todo.title}-(id):{todo.id}
-      </span>
+  {todo.title} - (id): {todo.id} - Completed : {todo.completed ? 'done' : 'undone'}
+</span>
+
       <button onClick={editHandler}>Edit</button>
       <button onClick={deleteHandler}>Delete</button>
     </li>

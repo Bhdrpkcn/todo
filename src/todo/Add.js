@@ -8,7 +8,7 @@ function Add({ setTodos }) {
     e.preventDefault()
     setTodos(todos => [{
         title: todo,
-        done: false,
+        completed: false,
         id: nanoid(),
       }, ...todos,]);
     setTodo('');
