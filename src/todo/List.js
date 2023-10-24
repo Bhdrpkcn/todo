@@ -1,12 +1,12 @@
 import React from "react";
 import Item from "./Item";
 
-function List({ todos }) {
+function List({ todos, setTodos }) {
 
   return (
-    <ul>
-     {todos.map((todo, key) => <Item key={key} todo={todo} />)}
-    </ul>
+    <div>
+     {todos.map((todo, key) => <Item key={key} setTodos={setTodos} todo={todo} />)}
+    </div>
   );
 }
 
