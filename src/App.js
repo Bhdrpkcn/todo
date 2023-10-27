@@ -5,8 +5,12 @@ import Add from "./todo/Add";
 import List from "./todo/List";
 import TestCounter from "./todo/TestCounter";
 import TestCounterButtons from "./todo/TestCounterButtons";
+import { useSelector, useDispatch } from "react-redux";
+import { setTodosRedux } from "./redux/todoSlice";
 //test to main 
 function App() {
+  const todosRedux = useSelector((state) => state.todosRedux)
+  const dispatch = useDispatch();
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -16,7 +20,7 @@ function App() {
   const fetchTodos = () => {
     fetch("https://jsonplaceholder.typicode.com/todos/")
       .then((response) => response.json())
-      .then((json) => setTodos(json.slice(0, 10)));
+      .then((json) => dispatch(setTodosRedux(json.slice(0, 10))));
   };
 
   return (
@@ -24,7 +28,7 @@ function App() {
       <Header />
       <TestCounter />
       <TestCounterButtons />
-      <Add setTodos={setTodos} />
+      <Add />
       <List todos={todos} setTodos={setTodos} />
     </div>
   );

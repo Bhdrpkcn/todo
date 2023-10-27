@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
+import { useDispatch } from "react-redux";
+import { addTodoRedux } from "../redux/todoSlice";
 
-function Add({ setTodos }) {
+function Add() {
+  const dispatch=useDispatch();
+
   const [todo, setTodo] = useState("");
 
-  const submitHandler = e => {
-    e.preventDefault()
-    setTodos(todos => [{
+
+ const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      addTodoRedux({
         title: todo,
         completed: false,
         id: nanoid(),
-      }, ...todos,]);
-    setTodo('');
+      })
+    );
+    setTodo("");
   };
 
   return (
