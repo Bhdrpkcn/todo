@@ -1,80 +1,63 @@
 import React, { useState } from "react";
-//Testing to only update main branch
-function Item({ setTodos, todo }) {
-  const [editTodo, setEditTodo] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(todo.title);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleCompletedRedux,
+  deleteTodoRedux,
+  editTodoAsync,
+  setIdToEdit,
+} from "../redux/todoSlice";
+
+function Item({ todo }) {
+  const dispatch = useDispatch();
+  const isEditing = useSelector((state) => state.todosRedux.isEditing);
+  const [editedTitle, setEditedTitle] = useState(todo.title); //çalışıyor todoların title larını çekiyor edit etmek için
+  const idToEdit = useSelector((state) => state.todosRedux.idToEdit); // Add this line to get idToEdit from Redux state
 
   const deleteHandler = () => {
-    setTodos((todos) => todos.filter((t) => t.id !== todo.id));
+    dispatch(deleteTodoRedux(todo.id));
   };
+
   const editHandler = () => {
-    setEditTodo(true);
+    dispatch(setIdToEdit(todo.id)); // Set the id of the todo to edit
+    dispatch(
+      editTodoAsync({ id: todo.id, title: editedTitle, isEditing: !isEditing })
+    );
   };
 
   const saveHandler = () => {
-    const updatedTodo = { ...todo, title: editedTitle };
-    // api den gelmeyen todo lar için if else blok :
-    if (typeof todo.id === "string" && !todo.id.startsWith("api_")) {
-      setTodos((todos) =>
-        todos.map((t) => (t.id === todo.id ? updatedTodo : t))
-      );
-      setEditTodo(false);
-    } else {
-      // API den gelen todoların editi için put methodu ile müdahele :
-      fetch(`https://jsonplaceholder.typicode.com/todos//${todo.id}`, {
-        method: "PUT",
-        body: JSON.stringify(updatedTodo),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("API request failed.");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          // Güncellediğim api den gelen todo yu Todos dizisine ekliyorum
-          setTodos((todos) => todos.map((t) => (t.id === data.id ? data : t)));
-          setEditTodo(false);
-        })
-        .catch((error) => {
-          console.error("Error: ", error);
-        });
-    }
+    dispatch(
+      editTodoAsync({ id: todo.id, title: editedTitle, isEditing: !isEditing })
+    );
   };
+  
+    const closeHandler = () => {
+      dispatch(editTodoAsync({ id: todo.id, title:todo.title, isEditing: !isEditing }));
+    };
 
-  const toggleCompleted = () => {
-    // todo'nun `completed` durumunu tersine çevir
-    const updatedTodo = { ...todo, completed: !todo.completed };
-    setTodos((todos) => todos.map((t) => (t.id === todo.id ? updatedTodo : t)));
+  const toggleCompletedHandler = () => {
+    dispatch(toggleCompletedRedux(todo.id));
   };
-
-  const closeHandler = () => {
-    setEditTodo(false);
-  };
-
-  console.log(todo);
   return (
     <div className="todoList">
-      {editTodo ? (
+      {isEditing && todo.id === idToEdit ? ( // Check if isEditing is true for this specific todo
         <div>
           <input
+            key={todo.id}
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
           />
           <button onClick={saveHandler}>Save</button>
-          <button onClick={closeHandler}>close</button>
+          <button onClick={closeHandler}>Close</button>
         </div>
       ) : (
         <div className={`todo ${todo.completed ? "completed" : ""}`}>
           <input
+            key={todo.id}
             className="checkBox"
             type="checkbox"
             checked={todo.completed}
-            onChange={toggleCompleted}
+            onChange={toggleCompletedHandler}
           />
           {todo.title} - (id): {todo.id}
           <div>

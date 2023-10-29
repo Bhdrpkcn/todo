@@ -4,22 +4,23 @@ import { useDispatch } from "react-redux";
 import { addTodoRedux } from "../redux/todoSlice";
 
 function Add() {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   const [todo, setTodo] = useState("");
 
 
  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      addTodoRedux({
-        title: todo,
-        completed: false,
-        id: nanoid(),
+   e.preventDefault();
+
+   dispatch(
+     addTodoRedux({
+       title: todo,
+       completed: false,
+       id: nanoid(),
       })
-    );
-    setTodo("");
-  };
+      );
+      setTodo("");
+    };
 
   return (
     <form onSubmit={submitHandler}>
