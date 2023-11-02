@@ -17,36 +17,38 @@
   background-color: #656f84;
   align-items: center; /* dikey */
   justify-content: space-between;
-  
 }
 .headerLogo {
   font-weight: 200;
   margin-left: 1rem;
 }
 
-ul{
+ul {
   color: black;
 }
 
-.todoList{
-
-}
-
 .todo {
+  width: 80vw;
+  height: 6rem;
+  font-size: calc(10px + 2vmin);
+  padding-left: 1rem;
   align-items: center;
-  border: .05rem solid black;
-  margin: .25rem;
   transition: all 0.5s ease;
 }
-
 .todo.completed {
+  width: 70vw;
+  height: 3rem;
   background-color: rgb(209, 209, 209);
   color: gray;
   font-style: italic;
   text-decoration: line-through;
   text-decoration-thickness: 1px;
+  border-radius: 1rem;
 }
 
-.checkBox{
-
+.todoItem {
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  text-overflow: ellipsis; /* Display an ellipsis (...) when text overflows the container */
+  max-width: 90%; /* Set a fixed width to the container */
+  overflow: scroll; /* Hide any overflowing text */
 }
